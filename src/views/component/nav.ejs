@@ -1,0 +1,27 @@
+<% const menuItems = typeof navItems !== 'undefined' ? navItems : [
+	{ label: 'Task', href: '/dashboard', icon: '&#9632;' },
+]; %>
+
+<aside class="side-nav" aria-label="Main navigation">
+	<a class="side-nav-brand" href="/dashboard">
+		<span class="brand-mark" aria-hidden="true">M</span>
+		<span><%= typeof currentUser !== 'undefined' && currentUser.username ? currentUser.username : 'Account' %></span>
+	</a>
+
+	<nav class="side-nav-menu">
+		<p class="side-nav-label">Workspace</p>
+		<% menuItems.forEach((item) => { %>
+			<a class="side-nav-link <%= currentPath === item.href ? 'is-active' : '' %>" href="<%= item.href %>" <%= currentPath === item.href ? 'aria-current="page"' : '' %>>
+				<span class="side-nav-icon" aria-hidden="true"><%- item.icon %></span>
+				<span><%= item.label %></span>
+			</a>
+		<% }); %>
+	</nav>
+
+	<div class="side-nav-footer">
+		<a class="side-nav-link" href="/logout">
+			<span class="side-nav-icon" aria-hidden="true">&#8599;</span>
+			<span>Log out</span>
+		</a>
+	</div>
+</aside>

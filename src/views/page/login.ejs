@@ -1,0 +1,48 @@
+<main class="auth-page">
+	<section class="auth-shell" aria-labelledby="login-title">
+		<div class="auth-brand">
+			<span class="brand-mark" aria-hidden="true">M</span>
+			<span>manage</span>
+		</div>
+
+		<div class="auth-copy">
+			<p class="eyebrow">Your work, in focus</p>
+			<h1 id="login-title">Welcome back.</h1>
+			<p class="auth-intro">Sign in to pick up where you left off and keep today moving.</p>
+		</div>
+
+		<form class="login-form" action="/" method="post">
+			<div class="field-group">
+				<label for="username">Username</label>
+				<input id="username" name="username" type="text" autocomplete="username" placeholder="e.g. khodjie" required>
+			</div>
+
+			<div class="field-group">
+				<div class="field-label-row">
+					<label for="password">Password</label>
+					<a href="/forgot-password">Forgot password?</a>
+				</div>
+				<input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required>
+			</div>
+
+			<button class="login-button" type="submit">
+				<span>Sign in</span>
+				<span aria-hidden="true">&#8594;</span>
+			</button>
+		</form>
+
+		<p class="auth-footer">New to manage? <a href="/register">Create an account</a></p>
+	</section>
+
+	<aside class="auth-aside" aria-label="Product highlight">
+		<div class="aside-topline"><span></span> A calmer way to work</div>
+		<div class="aside-message">
+			<p class="aside-kicker">Today, made clear</p>
+			<p class="aside-quote">“Small steps, consistently taken, make room for the work that matters.”</p>
+		</div>
+		<div class="aside-meta">
+			<span class="pulse-dot"></span>
+			<span>Everything in its place</span>
+		</div>
+	</aside>
+</main>

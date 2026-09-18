@@ -1,0 +1,60 @@
+<main class="auth-page">
+	<section class="auth-shell" aria-labelledby="signup-title">
+		<div class="auth-brand">
+			<span class="brand-mark" aria-hidden="true">M</span>
+			<span>manage</span>
+		</div>
+
+		<div class="auth-copy">
+			<p class="eyebrow">Make space for progress</p>
+			<h1 id="signup-title">Start fresh.</h1>
+			<p class="auth-intro">Create your workspace and bring your next important task into focus.</p>
+		</div>
+
+		<form class="login-form signup-form" action="/register" method="post">
+			<div class="field-group">
+				<label for="name">Full name</label>
+				<input id="name" name="name" type="text" autocomplete="name" placeholder="Your name" required>
+			</div>
+
+			<div class="field-group">
+				<label for="username">Username</label>
+				<input id="username" name="username" type="text" autocomplete="username" placeholder="Choose a username" required>
+			</div>
+
+			<div class="field-group">
+				<label for="email">Email address</label>
+				<input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+			</div>
+
+			<div class="field-group">
+				<label for="password">Password</label>
+				<input id="password" name="password" type="password" autocomplete="new-password" placeholder="Create a strong password" minlength="8" required>
+			</div>
+
+			<div class="field-group">
+				<label for="password-confirmation">Confirm password</label>
+				<input id="password-confirmation" type="password" autocomplete="new-password" placeholder="Repeat your password" minlength="8" required>
+			</div>
+
+			<button class="login-button" type="submit">
+				<span>Create account</span>
+				<span aria-hidden="true">&#8594;</span>
+			</button>
+		</form>
+
+		<p class="auth-footer">Already have an account? <a href="/">Sign in</a></p>
+	</section>
+
+	<aside class="auth-aside" aria-label="Product highlight">
+		<div class="aside-topline"><span></span> A calmer way to work</div>
+		<div class="aside-message">
+			<p class="aside-kicker">Your next chapter</p>
+			<p class="aside-quote">“Clarity is a practice, not a destination.”</p>
+		</div>
+		<div class="aside-meta">
+			<span class="pulse-dot"></span>
+			<span>Ready when you are</span>
+		</div>
+	</aside>
+</main>

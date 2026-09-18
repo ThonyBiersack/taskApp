@@ -1,0 +1,265 @@
+<div class="dashboard-layout">
+	<%- include('../component/nav') %>
+
+		<main class="dashboard-main">
+			<header class="dashboard-header">
+				<div>
+					<p class="eyebrow">
+						<%= new Date().toLocaleDateString('en-ID', { weekday: 'long' , year: 'numeric' , month: 'long' ,
+							day: 'numeric' }) %>
+					</p>
+					<h1>Welcome back.<%= typeof currentUser !== 'undefined' && currentUser.username ? ' ' + currentUser.username : '' %></h1>
+					<p class="dashboard-subtitle">
+						<%= activeTasks.length %> active <%= activeTasks.length===1 ? 'task' : 'tasks' %> • <%=
+									doneTasks.length %> completed
+					</p>
+				</div>
+				<button class="dashboard-add" data-open-modal="create-task" id="open-create-task-btn">+ <span>New
+						task</span></button>
+			</header>
+
+			<!-- ACTIVE TASKS SECTION -->
+			<% if (activeTasks.length> 0) { %>
+				<section class="tasks-section" aria-label="Active tasks">
+					<div class="section-header">
+						<h2>Active Tasks</h2>
+						<span class="task-count">
+							<%= activeTasks.length %>
+						</span>
+					</div>
+					<div class="tasks-grid">
+						<% activeTasks.forEach((task)=> { %>
+							<button
+								class="task-card task-card-selectable"
+								type="button"
+								data-edit-task
+								data-task-id="<%= task._id %>"
+								data-task-title="<%= encodeURIComponent(task.title) %>"
+								data-task-description="<%= encodeURIComponent(task.description || '') %>"
+								data-task-deadline="<%= task.deadline ? new Date(task.deadline).toISOString().slice(0, 10) : '' %>"
+								data-task-mindmap="<%= encodeURIComponent(task.mindmapSource) %>">
+								<span class="task-card-header">
+									<span class="task-title"><%= task.title %></span>
+									<span class="task-open-icon" aria-hidden="true">↗</span>
+								</span>
+								<span class="task-meta">
+									<% if (task.deadline) { %>
+										<time class="task-schedule" datetime="<%= new Date(task.deadline).toISOString() %>">
+											<span>📅</span>
+											<%= new Date(task.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+										</time>
+									<% } else { %>
+										<span class="task-schedule no-date">No deadline</span>
+									<% } %>
+								</span>
+							</button>
+							<% }); %>
+					</div>
+				</section>
+				<% } else { %>
+					<section class="tasks-section empty-state" aria-label="Active tasks">
+						<div class="empty-message">
+							<p>🎯 No active tasks</p>
+							<p class="empty-hint">Create a new task to get started</p>
+						</div>
+					</section>
+					<% } %>
+
+						<!-- COMPLETED TASKS SECTION -->
+						<% if (doneTasks.length> 0) { %>
+							<section class="tasks-section done-section" aria-label="Completed tasks">
+								<div class="section-header">
+									<h2>Completed Tasks</h2>
+									<span class="task-count">
+										<%= doneTasks.length %>
+									</span>
+								</div>
+								<div class="tasks-grid">
+									<% doneTasks.forEach((task)=> { %>
+										<article class="task-card task-card-done">
+											<div class="task-card-header">
+												<h3 class="task-title task-title-done">
+													<%= task.title %>
+												</h3>
+												<button class="task-check-btn task-check-done"
+													aria-label="Mark incomplete">✓</button>
+											</div>
+											<% if (task.description) { %>
+												<p class="task-description task-description-done">
+													<%= task.description %>
+												</p>
+												<% } %>
+													<div class="task-meta">
+														<% if (task.schedule) { %>
+															<time class="task-schedule task-schedule-done"
+																datetime="<%= task.schedule.toISOString() %>">
+																<span>✓</span>
+																<%= task.schedule.toLocaleDateString('en-US', {
+																	month: 'short' , day: 'numeric' , hour: '2-digit' ,
+																	minute: '2-digit' }) %>
+															</time>
+															<% } else { %>
+																<time
+																	class="task-schedule task-schedule-done">Completed</time>
+																<% } %>
+													</div>
+										</article>
+										<% }); %>
+								</div>
+							</section>
+							<% } %>
+		</main>
+</div>
+
+<dialog class="task-modal" id="modal-edit-task" aria-modal="true" aria-labelledby="edit-modal-title">
+	<div class="task-modal-inner">
+		<header class="task-modal-header">
+			<div>
+				<p class="eyebrow" style="color: var(--lime);">Task details</p>
+				<h2 id="edit-modal-title">Edit task</h2>
+			</div>
+			<button class="task-modal-close" id="edit-modal-close-btn" type="button" aria-label="Close edit task dialog">✕</button>
+		</header>
+
+		<div class="task-modal-body">
+			<section class="task-mindmap-preview" aria-live="polite">
+				<div class="panel-kicker">Task mindmap</div>
+				<div id="edit-task-mindmap" class="mermaid">Select a task to view its mindmap.</div>
+				<p class="mindmap-hint">Your numbered lines and bullet points appear here as branches.</p>
+			</section>
+
+			<form class="task-modal-form" method="POST" id="edit-task-form">
+				<div class="field-group">
+					<label for="edit-task-title">Title</label>
+					<input type="text" id="edit-task-title" name="title" required maxlength="20">
+				</div>
+
+				<div class="field-group">
+					<label for="edit-task-description">Description</label>
+					<textarea id="edit-task-description" name="description" rows="10" required></textarea>
+					<small class="field-hint">Start a line with - to add a subtask. Press Enter after a bullet to continue the list.</small>
+				</div>
+
+				<div class="field-group">
+					<label for="edit-task-deadline">Deadline</label>
+					<input type="date" id="edit-task-deadline" name="deadline" required>
+				</div>
+
+				<div class="task-modal-actions">
+					<button class="task-modal-cancel" id="edit-modal-cancel-btn" type="button">Cancel</button>
+					<button class="task-modal-submit" type="submit">Save changes <span aria-hidden="true">→</span></button>
+				</div>
+			</form>
+		</div>
+
+	</div>
+</dialog>
+
+<script type="module" src="/js/task-mindmap.js"></script>
+<script>
+	const editModal = document.getElementById('modal-edit-task');
+	const editForm = document.getElementById('edit-task-form');
+	const editTitle = document.getElementById('edit-task-title');
+	const editDescription = document.getElementById('edit-task-description');
+	const editDeadline = document.getElementById('edit-task-deadline');
+	const editMindmap = document.getElementById('edit-task-mindmap');
+	let mindmapUpdateTimer;
+
+	const mindmapLabel = (value) => String(value || 'Untitled task')
+		.replace(/\\/g, '\\\\')
+		.replace(/\[/g, '\\[')
+		.replace(/\]/g, '\\]')
+		.replace(/[\r\n]+/g, ' ')
+		.trim();
+
+	const updateTaskMindmap = () => {
+		if (!window.renderTaskMindmap) return;
+		const sourceLines = ['mindmap', `  root((${mindmapLabel(editTitle.value)}))`];
+		const stack = [];
+
+		editDescription.value.split(/\r?\n/).filter((line) => line.trim()).forEach((line) => {
+			const bullet = line.match(/^(\s*)-\s+(.*)$/);
+			const numbered = line.match(/^\s*\d+[.)]\s+(.*)$/);
+			const rawIndent = bullet ? bullet[1].replace(/\t/g, '    ').length : 0;
+			const label = bullet ? bullet[2] : numbered ? numbered[1] : line.trim();
+
+			if (numbered) {
+				stack.length = 0;
+				stack.push({ indent: 0, depth: 2, numbered: true });
+				sourceLines.push(`    ${mindmapLabel(label)}`);
+				return;
+			}
+
+			const isNumberedChild = bullet && stack.length && stack[0].numbered && rawIndent === 0;
+			const indent = bullet && (isNumberedChild || stack[stack.length - 1].indent === rawIndent)
+				? rawIndent + 1
+				: rawIndent;
+			while (stack.length && stack[stack.length - 1].indent >= indent) stack.pop();
+			const depth = stack.length ? stack[stack.length - 1].depth + 1 : 2;
+			sourceLines.push(`${'  '.repeat(depth)}${mindmapLabel(label)}`);
+			stack.push({ indent, depth });
+		});
+
+		const source = sourceLines.join('\n');
+		window.renderTaskMindmap(editMindmap, source, 'edit-task-mindmap-svg');
+	};
+
+	document.querySelectorAll('[data-edit-task]').forEach((taskButton) => {
+		taskButton.addEventListener('click', () => {
+			editForm.action = `/tasks/${taskButton.dataset.taskId}`;
+			editTitle.value = decodeURIComponent(taskButton.dataset.taskTitle);
+			editDescription.value = decodeURIComponent(taskButton.dataset.taskDescription);
+			editDeadline.value = taskButton.dataset.taskDeadline;
+			editModal.showModal();
+			updateTaskMindmap();
+			editTitle.focus();
+		});
+	});
+
+	const scheduleMindmapUpdate = () => {
+		clearTimeout(mindmapUpdateTimer);
+		mindmapUpdateTimer = setTimeout(updateTaskMindmap, 500);
+	};
+
+	editTitle.addEventListener('input', scheduleMindmapUpdate);
+	editDescription.addEventListener('input', scheduleMindmapUpdate);
+	editDescription.addEventListener('keydown', (event) => {
+		if (event.key === 'Tab') {
+			event.preventDefault();
+
+			const start = editDescription.selectionStart;
+			const beforeCursor = editDescription.value.slice(0, start);
+			const currentLine = beforeCursor.slice(beforeCursor.lastIndexOf('\n') + 1);
+			const indentation = (currentLine.match(/^\s*/) || [''])[0];
+			const insertion = `\n${indentation}  - `;
+
+			editDescription.setRangeText(insertion, start, editDescription.selectionEnd, 'end');
+			scheduleMindmapUpdate();
+			return;
+		}
+
+		if (event.key !== 'Enter') return;
+
+		const start = editDescription.selectionStart;
+		const beforeCursor = editDescription.value.slice(0, start);
+		const currentLine = beforeCursor.slice(beforeCursor.lastIndexOf('\n') + 1);
+		const bullet = currentLine.match(/^(\s*)-\s/);
+		const numbered = currentLine.match(/^(\s*)\d+[.)]\s+/);
+
+		if (!bullet && !numbered) return;
+
+		event.preventDefault();
+		const insertion = numbered
+			? `\n${numbered[1]}- `
+			: `\n${bullet[1]}- `;
+		editDescription.setRangeText(insertion, start, editDescription.selectionEnd, 'end');
+		scheduleMindmapUpdate();
+	});
+
+	const closeEditModal = () => editModal.close();
+	document.getElementById('edit-modal-close-btn').addEventListener('click', closeEditModal);
+	document.getElementById('edit-modal-cancel-btn').addEventListener('click', closeEditModal);
+	editModal.addEventListener('click', (event) => {
+		if (event.target === editModal) closeEditModal();
+	});
+</script>

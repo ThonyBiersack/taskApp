@@ -1,0 +1,63 @@
+<dialog class="task-modal" id="modal-create-task" aria-modal="true" aria-labelledby="modal-title">
+	<div class="task-modal-inner">
+		<header class="task-modal-header">
+			<div>
+				<p class="eyebrow" style="color: var(--lime);">New Task</p>
+				<h2 id="modal-title">Create task</h2>
+			</div>
+			<button class="task-modal-close" id="modal-close-btn" aria-label="Close modal" autofocus>✕</button>
+		</header>
+
+		<form class="task-modal-form" method="POST" action="/tasks" id="create-task-form">
+			<div class="field-group">
+				<label for="task-title">Title <span style="color:var(--lime)">*</span></label>
+				<input type="text" id="task-title" name="title" placeholder="What needs to be done?" required
+					autocomplete="off">
+			</div>
+
+			<div class="field-group">
+				<label for="task-description">Description <span style="color:var(--lime)">*</span></label>
+				<textarea id="task-description" name="description" placeholder="Add some detail..." rows="3"
+					required></textarea>
+			</div>
+
+			<div class="field-group">
+				<label for="deadline">Deadline <span style="color:var(--lime)">*</span></label>
+				<input type="date" id="deadline" name="deadline" required>
+			</div>
+
+			<div class="task-modal-actions">
+				<button type="button" class="task-modal-cancel" id="modal-cancel-btn">Cancel</button>
+				<button type="submit" class="task-modal-submit">
+					<span>Create task</span>
+					<span>→</span>
+				</button>
+			</div>
+		</form>
+	</div>
+</dialog>
+
+<script>
+	const modal = document.getElementById('modal-create-task');
+	const openBtns = document.querySelectorAll('[data-open-modal="create-task"]');
+	const closeBtn = document.getElementById('modal-close-btn');
+	const cancelBtn = document.getElementById('modal-cancel-btn');
+
+	openBtns.forEach(btn => btn.addEventListener('click', () => {
+		modal.showModal();
+		document.getElementById('task-title').focus();
+	}));
+
+	function closeModal() {
+		modal.close();
+		document.getElementById('create-task-form').reset();
+	}
+
+	closeBtn.addEventListener('click', closeModal);
+	cancelBtn.addEventListener('click', closeModal);
+
+	// close on backdrop click
+	modal.addEventListener('click', (e) => {
+		if (e.target === modal) closeModal();
+	});
+</script>

@@ -1,0 +1,28 @@
+<main class="handle-page">
+	<section class="handle-card" aria-labelledby="handle-title">
+		<div class="auth-brand">
+			<span class="brand-mark" aria-hidden="true">M</span>
+			<span>manage</span>
+		</div>
+
+		<% if (status === 'success') { %>
+			<p class="handle-icon handle-icon-success" aria-hidden="true">&#10003;</p>
+			<p class="eyebrow">All set</p>
+			<h1 id="handle-title">Account created.</h1>
+			<p class="handle-message"><%= message %></p>
+			<a class="handle-button" href="/">Continue to sign in <span aria-hidden="true">&#8594;</span></a>
+		<% } else if (status === 'not-found') { %>
+			<p class="handle-code">404</p>
+			<p class="eyebrow">Wrong turn</p>
+			<h1 id="handle-title">Page not found.</h1>
+			<p class="handle-message"><%= message %></p>
+			<a class="handle-button" href="/">Back to sign in <span aria-hidden="true">&#8592;</span></a>
+		<% } else { %>
+			<p class="handle-icon handle-icon-error" aria-hidden="true">!</p>
+			<p class="eyebrow">Something needs attention</p>
+			<h1 id="handle-title">We could not finish that.</h1>
+			<p class="handle-message"><%= message %></p>
+			<a class="handle-button" href="/register">Try again <span aria-hidden="true">&#8594;</span></a>
+		<% } %>
+	</section>
+</main>

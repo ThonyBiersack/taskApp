@@ -1,0 +1,126 @@
+<% const adminStats = typeof stats !== 'undefined' ? stats : { users: 128, tasks: 346, completed: 218, pending: 128 }; %>
+<% const adminUsers = typeof users !== 'undefined' ? users : [
+	{ name: 'Khodjie', username: 'khodjie', email: 'khodjie@example.com', status: 'Active', joined: 'Today' },
+	{ name: 'Maya Chen', username: 'mayachen', email: 'maya@example.com', status: 'Active', joined: 'Yesterday' },
+	{ name: 'Rafi Noor', username: 'rafinoor', email: 'rafi@example.com', status: 'Pending', joined: 'Aug 28' }
+]; %>
+<% const adminTasks = typeof tasks !== 'undefined' ? tasks : [
+	{ title: 'Launch project workspace', owner: 'Khodjie', status: 'In progress', deadline: 'Sep 12' },
+	{ title: 'Review account flow', owner: 'Maya Chen', status: 'Completed', deadline: 'Sep 09' },
+	{ title: 'Prepare onboarding notes', owner: 'Rafi Noor', status: 'Pending', deadline: 'Sep 15' }
+]; %>
+
+<div class="admin-layout">
+	<aside class="admin-sidebar">
+		<a class="admin-brand" href="/admin">
+			<span class="brand-mark" aria-hidden="true">M</span>
+			<span>manage <small>admin</small></span>
+		</a>
+
+		<nav class="admin-nav" aria-label="Admin navigation">
+			<p class="admin-nav-label">Control room</p>
+			<a class="admin-nav-link is-active" href="/admin"><span aria-hidden="true">▦</span> Overview</a>
+			<a class="admin-nav-link" href="/admin/users"><span aria-hidden="true">◉</span> Users</a>
+			<a class="admin-nav-link" href="/admin/tasks"><span aria-hidden="true">✓</span> Tasks</a>
+			<a class="admin-nav-link" href="/admin/settings"><span aria-hidden="true">⚙</span> Settings</a>
+		</nav>
+
+		<div class="admin-sidebar-footer">
+			<div class="admin-status"><span></span> All systems operational</div>
+			<a class="admin-nav-link" href="/logout"><span aria-hidden="true">↗</span> Log out</a>
+		</div>
+	</aside>
+
+	<main class="admin-main">
+		<header class="admin-header">
+			<div>
+				<p class="eyebrow">Monday, September 15</p>
+				<h1>Control room.</h1>
+				<p class="admin-subtitle">A quiet overview of what is happening across your workspace.</p>
+			</div>
+			<div class="admin-header-meta">
+				<span class="admin-live-dot"></span>
+				<span>Live overview</span>
+			</div>
+		</header>
+
+		<section class="admin-stats" aria-label="Platform summary">
+			<article class="admin-stat admin-stat-featured">
+				<span class="admin-stat-label">Total users</span>
+				<strong><%= adminStats.users %></strong>
+				<span class="admin-stat-note">+12% this month</span>
+			</article>
+			<article class="admin-stat">
+				<span class="admin-stat-label">Total tasks</span>
+				<strong><%= adminStats.tasks %></strong>
+				<span class="admin-stat-note">Across all workspaces</span>
+			</article>
+			<article class="admin-stat">
+				<span class="admin-stat-label">Completed</span>
+				<strong><%= adminStats.completed %></strong>
+				<span class="admin-stat-note">63% completion rate</span>
+			</article>
+			<article class="admin-stat admin-stat-alert">
+				<span class="admin-stat-label">Needs review</span>
+				<strong><%= adminStats.pending %></strong>
+				<span class="admin-stat-note">Pending or overdue</span>
+			</article>
+		</section>
+
+		<section class="admin-content-grid">
+			<section class="admin-panel admin-panel-wide" aria-labelledby="users-title">
+				<div class="admin-panel-heading">
+					<div>
+						<p class="panel-kicker">People</p>
+						<h2 id="users-title">Recent users</h2>
+					</div>
+					<a href="/admin/users">View all <span aria-hidden="true">↗</span></a>
+				</div>
+				<div class="admin-table-wrap">
+					<table class="admin-table">
+						<thead><tr><th>User</th><th>Email</th><th>Status</th><th>Joined</th></tr></thead>
+						<tbody>
+							<% adminUsers.forEach((user) => { %>
+								<tr>
+									<td><span class="admin-avatar"><%= user.name.charAt(0) %></span><span><strong><%= user.name %></strong><small>@<%= user.username %></small></span></td>
+									<td><%= user.email %></td>
+									<td><span class="admin-badge admin-badge-<%= user.status.toLowerCase() %>"><%= user.status %></span></td>
+									<td><%= user.joined %></td>
+								</tr>
+							<% }); %>
+						</tbody>
+					</table>
+				</div>
+			</section>
+
+			<section class="admin-panel" aria-labelledby="activity-title">
+				<div class="admin-panel-heading">
+					<div><p class="panel-kicker">Pulse</p><h2 id="activity-title">Activity</h2></div>
+				</div>
+				<div class="activity-chart" aria-label="Weekly activity chart">
+					<% [38, 54, 42, 76, 61, 88, 70].forEach((height, index) => { %>
+						<div class="activity-bar-group"><span class="activity-bar" style="--bar-height: <%= height %>;"></span><small><%= ['M','T','W','T','F','S','S'][index] %></small></div>
+					<% }); %>
+				</div>
+				<div class="activity-total"><strong>2,481</strong><span>actions this week</span></div>
+			</section>
+
+			<section class="admin-panel admin-panel-wide" aria-labelledby="tasks-title">
+				<div class="admin-panel-heading">
+					<div><p class="panel-kicker">Workspace flow</p><h2 id="tasks-title">Task activity</h2></div>
+					<a href="/admin/tasks">View all <span aria-hidden="true">↗</span></a>
+				</div>
+				<div class="admin-task-list">
+					<% adminTasks.forEach((task) => { %>
+						<div class="admin-task-row">
+							<span class="admin-task-marker admin-task-marker-<%= task.status.toLowerCase().replace(' ', '-') %>"></span>
+							<div><strong><%= task.title %></strong><small>Owned by <%= task.owner %></small></div>
+							<span class="admin-task-deadline"><%= task.deadline %></span>
+							<span class="admin-badge admin-badge-<%= task.status.toLowerCase().replace(' ', '-') %>"><%= task.status %></span>
+						</div>
+					<% }); %>
+				</div>
+			</section>
+		</section>
+	</main>
+</div>

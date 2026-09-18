@@ -1,0 +1,45 @@
+<main class="auth-page">
+	<section class="auth-shell" aria-labelledby="reset-title">
+		<div class="auth-brand">
+			<span class="brand-mark" aria-hidden="true">M</span>
+			<span>manage</span>
+		</div>
+
+		<div class="auth-copy">
+			<p class="eyebrow">Reset your access</p>
+			<h1 id="reset-title">Forgot password?</h1>
+			<p class="auth-intro">Enter your username and a new password to regain access to your account.</p>
+		</div>
+
+		<form class="login-form" action="/forgot-password" method="post">
+			<div class="field-group">
+				<label for="username">Username</label>
+				<input id="username" name="username" type="text" autocomplete="username" placeholder="e.g. khodjie" required>
+			</div>
+
+			<div class="field-group">
+				<label for="newPassword">New password</label>
+				<input id="newPassword" name="newPassword" type="password" autocomplete="new-password" placeholder="Create a strong password" minlength="8" required>
+			</div>
+
+			<button class="login-button" type="submit">
+				<span>Reset password</span>
+				<span aria-hidden="true">&#8594;</span>
+			</button>
+		</form>
+
+		<p class="auth-footer">Remembered your password? <a href="/">Sign in</a></p>
+	</section>
+
+	<aside class="auth-aside" aria-label="Product highlight">
+		<div class="aside-topline"><span></span> Security matters</div>
+		<div class="aside-message">
+			<p class="aside-kicker">Keep it safe</p>
+			<p class="aside-quote">"A strong password is your first line of defense."</p>
+		</div>
+		<div class="aside-meta">
+			<span class="pulse-dot"></span>
+			<span>Your account, secured</span>
+		</div>
+	</aside>
+</main>
