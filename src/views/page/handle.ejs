@@ -17,6 +17,12 @@
 			<h1 id="handle-title">Page not found.</h1>
 			<p class="handle-message"><%= message %></p>
 			<a class="handle-button" href="/">Back to sign in <span aria-hidden="true">&#8592;</span></a>
+		<% } else if (status === 'unauthorized') { %>
+			<p class="handle-code">401</p>
+			<p class="eyebrow">Access denied</p>
+			<h1 id="handle-title">Please check your login details.</h1>
+			<p class="handle-message"><%= message %></p>
+			<a class="handle-button" href="/login">Try again <span aria-hidden="true">&#8594;</span></a>
 		<% } else { %>
 			<p class="handle-icon handle-icon-error" aria-hidden="true">!</p>
 			<p class="eyebrow">Something needs attention</p>

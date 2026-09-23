@@ -32,7 +32,7 @@ const loginController = (async (req, res) => {
         if (!cari) {
             return res.status(401).render('page/handle', {
                 title: 'login failed',
-                status: 'error',
+                status: 'unauthorized',
                 message: 'Username or Password is wrong, please try again'
             })
         }
@@ -41,7 +41,7 @@ const loginController = (async (req, res) => {
         if (!decode) {
             return res.status(401).render('page/handle', {
                 title: 'login failed',
-                status: 'not-found',
+                status: 'unauthorized',
                 message: 'Username or Password is wrong, please try again'
             })
         }

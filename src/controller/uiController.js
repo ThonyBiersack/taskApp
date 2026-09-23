@@ -38,12 +38,16 @@ const dashboardController = (async (req, res) => {
 
 // buat nerima pesan status 200/400/404
 const handleController = (req, res) => {
-    const status = ['success', 'error', 'not-found'].includes(req.query.status)
+    const status = ['success', 'error', 'not-found', 'unauthorized'].includes(req.query.status)
         ? req.query.status
         : 'error';
     const message = req.query.message || 'Something went wrong. Please try again.';
 
-    return res.status(status === 'not-found' ? 404 : status === 'error' ? 400 : 200)
+    return res.status(
+        status === 'not-found' ? 404 :
+        status === 'unauthorized' ? 401 :
+        status === 'success' ? 200 : 400
+    )
         .render('page/handle', { title: status === 'success' ? 'Success' : 'Request status', status, message });
 };
 
