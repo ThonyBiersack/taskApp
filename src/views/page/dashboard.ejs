@@ -223,18 +223,25 @@
 
 	editTitle.addEventListener('input', scheduleMindmapUpdate);
 	editDescription.addEventListener('input', scheduleMindmapUpdate);
+	const insertNestedBulletForEdit = () => {
+		const start = editDescription.selectionStart;
+		const beforeCursor = editDescription.value.slice(0, start);
+		const lineStart = beforeCursor.lastIndexOf('\n') + 1;
+		const nextLineBreak = editDescription.value.indexOf('\n', start);
+		const currentLine = editDescription.value.slice(
+			lineStart,
+			nextLineBreak === -1 ? editDescription.value.length : nextLineBreak
+		);
+		const indentation = (currentLine.match(/^\s*/) || [''])[0];
+		const insertion = currentLine.trim() === '' ? `${indentation}  - ` : `\n${indentation}  - `;
+		editDescription.setRangeText(insertion, start, editDescription.selectionEnd, 'end');
+		scheduleMindmapUpdate();
+	};
+
 	editDescription.addEventListener('keydown', (event) => {
 		if (event.key === 'Tab') {
 			event.preventDefault();
-
-			const start = editDescription.selectionStart;
-			const beforeCursor = editDescription.value.slice(0, start);
-			const currentLine = beforeCursor.slice(beforeCursor.lastIndexOf('\n') + 1);
-			const indentation = (currentLine.match(/^\s*/) || [''])[0];
-			const insertion = `\n${indentation}  - `;
-
-			editDescription.setRangeText(insertion, start, editDescription.selectionEnd, 'end');
-			scheduleMindmapUpdate();
+			insertNestedBulletForEdit();
 			return;
 		}
 

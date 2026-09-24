@@ -25,6 +25,5 @@ app.use(notFoundController);
 koneksi();
 
 app.listen(process.env.PORT, () => {
-    console.log(`server berjalan di http://${process.env.HOST}:${process.env.PORT}`)
-})
-
+    console.log(`server berjalan di http://${process.env.HOST}:${process.env.PORT}`);
+});

@@ -17,8 +17,9 @@
 
 			<div class="field-group">
 				<label for="task-description">Description <span style="color:var(--lime)">*</span></label>
-				<textarea id="task-description" name="description" placeholder="Add some detail..." rows="3"
+				<textarea id="task-description" name="description" placeholder="Add some detail..." rows="8"
 					required></textarea>
+				<small class="field-hint">Start a line with - to add a subtask. Press Enter after a bullet to continue the list.</small>
 			</div>
 
 			<div class="field-group">
@@ -59,5 +60,42 @@
 	// close on backdrop click
 	modal.addEventListener('click', (e) => {
 		if (e.target === modal) closeModal();
+	});
+
+	const createDescription = document.getElementById('task-description');
+	const insertNestedBullet = (textarea) => {
+		const start = textarea.selectionStart;
+		const beforeCursor = textarea.value.slice(0, start);
+		const lineStart = beforeCursor.lastIndexOf('\n') + 1;
+		const nextLineBreak = textarea.value.indexOf('\n', start);
+		const currentLine = textarea.value.slice(
+			lineStart,
+			nextLineBreak === -1 ? textarea.value.length : nextLineBreak
+		);
+		const indentation = (currentLine.match(/^\s*/) || [''])[0];
+		const insertion = currentLine.trim() === '' ? `${indentation}  - ` : `\n${indentation}  - `;
+		textarea.setRangeText(insertion, start, textarea.selectionEnd, 'end');
+	};
+
+	createDescription.addEventListener('keydown', (event) => {
+		if (event.key === 'Tab') {
+			event.preventDefault();
+			insertNestedBullet(createDescription);
+			return;
+		}
+
+		if (event.key !== 'Enter') return;
+
+		const start = createDescription.selectionStart;
+		const beforeCursor = createDescription.value.slice(0, start);
+		const currentLine = beforeCursor.slice(beforeCursor.lastIndexOf('\n') + 1);
+		const bullet = currentLine.match(/^(\s*)-\s/);
+		const numbered = currentLine.match(/^(\s*)\d+[.)]\s+/);
+
+		if (!bullet && !numbered) return;
+
+		event.preventDefault();
+		const insertion = numbered ? `\n${numbered[1]}- ` : `\n${bullet[1]}- `;
+		createDescription.setRangeText(insertion, start, createDescription.selectionEnd, 'end');
 	});
 </script>
