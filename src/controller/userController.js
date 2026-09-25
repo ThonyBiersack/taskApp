@@ -22,8 +22,8 @@ const loginController = (async (req, res) => {
             return res.status(401).render('page/handle', {
                 title: 'fields is undefined',
                 status: 'error',
-                message: 'please fill all fields',
-                errors: login.error.flattenError()
+                httpStatus: 401,
+                message: login.error.flattenError(),
             })
         };
         const { username, password } = login.data;
@@ -32,7 +32,8 @@ const loginController = (async (req, res) => {
         if (!cari) {
             return res.status(401).render('page/handle', {
                 title: 'login failed',
-                status: 'unauthorized',
+                status: 'error',
+                httpStatus: 401,
                 message: 'Username or Password is wrong, please try again'
             })
         }
@@ -41,7 +42,8 @@ const loginController = (async (req, res) => {
         if (!decode) {
             return res.status(401).render('page/handle', {
                 title: 'login failed',
-                status: 'unauthorized',
+                status: 'error',
+                httpStatus: 401,
                 message: 'Username or Password is wrong, please try again'
             })
         }
@@ -59,7 +61,8 @@ const loginController = (async (req, res) => {
     } catch (error) {
         return res.status(500).render('page/handle', {
             title: 'server not connect',
-            status: 'Server Down',
+            status: 'server error',
+            httpStatus: 500,
             message: 'try again for a few moment'
         })
     };
@@ -71,7 +74,9 @@ const formRegController = (async (req, res) => {
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: error
+            status: 'server error',
+            httpStatus: 500,
+            message: 'try again for a few moment'
         });
     }
 });
@@ -83,9 +88,9 @@ const registController = (async (req, res) => {
         if (!newUser.success) {
             return res.status(400).render('page/handle', {
                 title: 'Registration error',
-                status: 'error',
-                message: 'Please check your details and try again.',
-                errors: newUser.error.flattenError()
+                status: 'invalid-input',
+                httpStatus: 400,
+                message: newUser.error.flattenError(),
             });
         }
         const { name, username, email, password } = newUser.data;
@@ -102,8 +107,9 @@ const registController = (async (req, res) => {
     } catch (error) {
         return res.status(500).render('page/handle', {
             title: 'Registration error',
-            status: 'error',
-            message: 'The username or email may already be in use.'
+            status: 'server error',
+            httpStatus: 500,
+            message: 'try again for a few moment'
         });
     };
 })
@@ -114,8 +120,9 @@ const forgetFormController = (async (req, res) => {
     } catch (error) {
         return res.status(500).render('page/handle', {
             title: 'Error',
-            status: 'error',
-            message: 'Could not load page'
+            status: 'server error',
+            httpStatus: 500,
+            message: 'try again for a few moment'
         })
     }
 });
@@ -128,8 +135,8 @@ const forgetController = (async (req, res) => {
             return res.status(400).render('page/handle', {
                 title: 'Reset failed',
                 status: 'error',
-                message: 'Please enter a valid username and strong password.',
-                errors: reset.error.flattenError()
+                httpStatus: 400,
+                message: reset.error.flattenError(),
             });
         };
         const { username, newPassword } = reset.data;
@@ -139,7 +146,8 @@ const forgetController = (async (req, res) => {
             return res.status(401).render('page/handle', {
                 title: 'reset failed',
                 status: 'error',
-                message: 'Username not found, please try again'
+                httpStatus: 401,
+                message: 'Username is incorrect, please try again'
             })
         }
 
@@ -150,8 +158,9 @@ const forgetController = (async (req, res) => {
     } catch (error) {
         return res.status(500).render('page/handle', {
             title: 'server error',
-            status: 'error',
-            message: 'Could not reset password. Please try again.'
+            status: 'server error',
+            httpStatus: 500,
+            message: 'try again for a few moment'
         })
     };
 })
@@ -161,19 +170,21 @@ const notFoundController = (async (req, res) => {
     return await res.status(404).render('page/handle', {
         title: "Page Not Found",
         status: "not-found",
-        message: "Halaman yang diminta ngga ada!"
+        httpStatus: 404,
+        message: "The page you are looking for does not exist. Please check the URL and try again."
     });
 });
 
 const logOutController = (async (req, res) => {
     try {
         res.clearCookie('token');
-        return res.redirect(303, '/login');
+        return res.redirect(303, '/');
     } catch (error) {
         return res.status(500).render('page/handle', {
             title: 'server error',
-            status: 'error',
-            message: 'Could not log out. Please try again.'
+            status: 'server error',
+            httpStatus: 500,
+            message: 'try again for a few moment'
         })
     };
 })

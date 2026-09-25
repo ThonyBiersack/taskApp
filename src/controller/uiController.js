@@ -31,6 +31,7 @@ const dashboardController = (async (req, res) => {
         return res.status(500).render('page/handle', {
             title: 'Dashboard Error',
             status: 'error',
+            httpStatus: 500,
             message: 'Could not load dashboard'
         });
     }
@@ -43,12 +44,13 @@ const handleController = (req, res) => {
         : 'error';
     const message = req.query.message || 'Something went wrong. Please try again.';
 
-    return res.status(
+    const httpStatus =
         status === 'not-found' ? 404 :
         status === 'unauthorized' ? 401 :
-        status === 'success' ? 200 : 400
-    )
-        .render('page/handle', { title: status === 'success' ? 'Success' : 'Request status', status, message });
+        status === 'success' ? 200 : 400;
+
+    return res.status(httpStatus)
+        .render('page/handle', { title: status === 'success' ? 'Success' : 'Request status', status, httpStatus, message });
 };
 
 const taskController = (async (req, res) => {
@@ -59,6 +61,7 @@ const taskController = (async (req, res) => {
             return res.status(400).render('page/handle', {
                 title: 'Task creation error',
                 status: 'error',
+                httpStatus: 400,
                 message: newTask.prettifyError()
             })
         }
@@ -80,6 +83,7 @@ const taskController = (async (req, res) => {
         return res.status(500).render('page/handle', {
             title: 'Task creation error',
             status: 'error',
+            httpStatus: 500,
             message: 'Could not create task. Please try again.'
         })
     }
@@ -93,6 +97,7 @@ const updateTaskController = (async (req, res) => {
             return res.status(400).render('page/handle', {
                 title: 'Task update error',
                 status: 'error',
+                httpStatus: 400,
                 message: updatedTask.error.flattenError()
             });
         }
@@ -107,6 +112,7 @@ const updateTaskController = (async (req, res) => {
             return res.status(404).render('page/handle', {
                 title: 'Task not found',
                 status: 'not-found',
+                httpStatus: 404,
                 message: 'That task could not be found.'
             });
         }
@@ -117,6 +123,7 @@ const updateTaskController = (async (req, res) => {
         return res.status(500).render('page/handle', {
             title: 'Task update error',
             status: 'error',
+            httpStatus: 500,
             message: 'Could not update task. Please try again.'
         });
     }
