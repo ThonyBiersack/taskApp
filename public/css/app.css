@@ -29,6 +29,7 @@ body {
 }
 
 .auth-brand { display: flex; align-items: center; gap: .65rem; font: 700 1.05rem/1 Arial, sans-serif; letter-spacing: -.04em; }
+.brand-logo { display: block; width: 2rem; height: 2rem; object-fit: contain; border-radius: 7px; }
 .brand-mark { display: grid; width: 2rem; height: 2rem; place-items: center; border-radius: 7px; background: var(--forest); color: var(--lime); font: 700 1rem Arial, sans-serif; }
 .auth-copy { margin: clamp(5rem, 13vh, 9rem) 0 3rem; max-width: 440px; }
 .eyebrow, .aside-kicker, .aside-topline { margin: 0 0 1rem; color: var(--forest); font: 700 .7rem/1 Arial, sans-serif; letter-spacing: .14em; text-transform: uppercase; }
@@ -66,6 +67,7 @@ input:focus { border-color: var(--forest); box-shadow: 0 0 0 3px rgba(35,75,59,.
 .handle-button:hover { background: #e8ff91; color: #101512 !important; }
 .side-nav { width: 260px; min-height: 100vh; display: flex; flex-direction: column; padding: 2rem 1rem; border-right: 1px solid var(--line); background: #141b17; color: var(--ink); }
 .side-nav-brand { display: flex; align-items: center; gap: .65rem; margin: 0 .75rem 4rem; color: var(--ink); font: 700 1.05rem/1 Arial, sans-serif; letter-spacing: -.04em; text-decoration: none; }
+.side-nav-brand .brand-logo, .admin-brand .brand-logo { width: 2rem; height: 2rem; }
 .side-nav-menu { display: grid; gap: .35rem; }
 .side-nav-label { margin: 0 .85rem .65rem; color: var(--muted); font: 700 .65rem/1 Arial, sans-serif; letter-spacing: .14em; text-transform: uppercase; }
 .side-nav-link { display: flex; align-items: center; gap: .8rem; min-height: 46px; padding: .75rem .85rem; border-left: 2px solid transparent; color: var(--muted); font: 700 .78rem/1.2 Arial, sans-serif; text-decoration: none; transition: color .2s, background .2s, border-color .2s; }
